@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .summary-container {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+        }
+        .summary-container div {
+            flex: 1;
+            min-width: 180px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            text-align: center;
+        }
+        .summary-container button {
+        padding: 3px 7px;
+        font-size: 12px;
+        border: none;
+        border-radius: 3px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        }
+
+        .summary-container button:hover {
+        background-color: #007bff;
+        }
+        .logout-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Personal Finance Tracker</h1>
+
+    <div class="container">
+        <!-- Form Section -->
+        <div class="form-container">
+            <form action="{{ url_for('finance') }}" method="POST">
+                <input type="text" name="description" placeholder="Description" required>
+                <input type="number" name="amount" placeholder="Amount" min ="0" required>
+                <select name="type" required>
+                    <option value="Income">Income</option>
+                    <option value="Expense">Expense</option>
+                    <option value="Savings">Savings</option>
+                </select>
+                <button type="submit">Add</button>
+            </form>
+        </div>
+
+        <!-- Incomes Section -->
+        <div class="summary-container">
+            <div>
+                <h2>Incomes</h2>
+                <ul>
+                    {% for description, amount in incomes.items() %}
+                        <li>{{ description }} - {{ amount }} kr
+                            <form action="{{ url_for('delete_entry') }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="type" value="Income">
+                                <input type="hidden" name="description" value="{{ description }}">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>
+                <h2>Expenses</h2>
+                <ul>
+                    {% for description, amount in expenses.items() %}
+                        <li>{{ description }} - {{ amount }} kr
+                            <form action="{{ url_for('delete_entry') }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="type" value="Expense">
+                                <input type="hidden" name="description" value="{{ description }}">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>
+                <h2>Savings</h2>
+                <ul>
+                    {% for description, amount in savings.items() %}
+                        <li>{{ description }} - {{ amount }} kr
+                            <form action="{{ url_for('delete_entry') }}" method="POST" style="display:inline;">
+                                <input type="hidden" name="type" value="Savings">
+                                <input type="hidden" name="description" value="{{ description }}">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Summary Data Section -->
+        <div class="summary-container">
+            <div>
+                <h2>Summary</h2>
+                <p>Total Income: {{ total_income }} kr</p>
+                <p>Total Expenses: {{ total_expenses }} kr</p>
+                <p>Net Result: {{ net_result }} kr</p>
+                <p>Savings: {{ total_savings }} kr</p>
+                <p>Net Result After Savings: {{ net_result_after_savings }} kr</p>
+            </div>
+        </div>
+
+        <!-- Logout Button -->
+        <div class="logout-container">
+            <form action="{{ url_for('logout') }}" method="GET">
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+
+    </div>
+
+</body>
+</html>
