@@ -54,7 +54,7 @@ def login():
 
         try:
             # Check if the user exists in the database
-            query = "SELECT * FROM financeapp WHERE username = ? AND password = ?"
+            query = "SELECT * FROM financeapp_prototype WHERE username = ? AND password = ?"
             cursor.execute(query, (username, password))
             user = cursor.fetchone()
 
@@ -91,7 +91,7 @@ def register():
 
         try:
             # Check if the user already exists
-            query = "SELECT * FROM financeapp WHERE username = ?"
+            query = "SELECT * FROM financeapp_prototype WHERE username = ?"
             cursor.execute(query, (username,))
             user = cursor.fetchone()
 
@@ -99,7 +99,7 @@ def register():
                 flash("User already exists. Please login.", 'error')
             else:
                 # Insert new user into the database
-                insert_query = "INSERT INTO financeapp (username, password) VALUES (?, ?)"
+                insert_query = "INSERT INTO financeapp_prototype (username, password) VALUES (?, ?)"
                 cursor.execute(insert_query, (username, password))
                 conn.commit()
                 flash("Registration successful! Please log in.", 'success')
@@ -132,7 +132,7 @@ def finance():
             return redirect(url_for('login'))
 
         # Retrieve the finance data for the logged-in user
-        query = "SELECT income, cost, savings FROM financeapp WHERE username = ?"
+        query = "SELECT income, cost, savings FROM financeapp_prototype WHERE username = ?"
         cursor.execute(query, (username,))
         result = cursor.fetchone()
 
@@ -195,7 +195,7 @@ def finance():
             return redirect(url_for('finance'))
 
         # Retrieve existing data for the logged-in user
-        query = "SELECT income, cost, savings FROM financeapp WHERE username = ?"
+        query = "SELECT income, cost, savings FROM financeapp_prototype WHERE username = ?"
         cursor.execute(query, (username,))
         result = cursor.fetchone()
 
@@ -214,7 +214,7 @@ def finance():
 
         # Save the updated data back to the database
         update_query = """
-            UPDATE financeapp 
+            UPDATE financeapp_prototype 
             SET income = ?, cost = ?, savings = ? 
             WHERE username = ?
         """
@@ -245,7 +245,7 @@ def delete_entry():
     cursor = conn.cursor()
 
     # Retrieve existing data for the logged-in user
-    query = "SELECT income, cost, savings FROM financeapp WHERE username = ?"
+    query = "SELECT income, cost, savings FROM financeapp_prototype WHERE username = ?"
     cursor.execute(query, (username,))
     result = cursor.fetchone()
 
@@ -267,7 +267,7 @@ def delete_entry():
 
     # Save the updated data back to the database
     update_query = """
-        UPDATE financeapp 
+        UPDATE financeapp_prototype 
         SET income = ?, cost = ?, savings = ? 
         WHERE username = ?
     """
