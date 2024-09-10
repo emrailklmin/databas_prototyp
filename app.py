@@ -18,10 +18,10 @@ conn_create_table = get_db_connection()
 cursor = conn_create_table.cursor()
 create_table_query = """
     IF NOT EXISTS (
-        SELECT * FROM sys.tables WHERE name = 'financeapp'
+        SELECT * FROM sys.tables WHERE name = 'financeapp_prototype'
     )
     BEGIN
-        CREATE TABLE financeapp (
+        CREATE TABLE financeapp_prototype (
             username NVARCHAR(100) PRIMARY KEY,
             password NVARCHAR(255),
             income VARBINARY(MAX),
